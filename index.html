@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NoDwell Pitch Deck Gallery</title>
+  <meta name="description" content="Central hub for all NoDwell pitch decks - personalized investor presentations, general decks, and branch variants.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --surface-hover: #1a1a28;
+      --border: rgba(139, 92, 246, 0.15);
+      --border-hover: rgba(139, 92, 246, 0.4);
+      --accent: #8b5cf6;
+      --accent-glow: rgba(139, 92, 246, 0.25);
+      --green: #22c55e;
+      --cyan: #06b6d4;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --text: #e2e2ef;
+      --text-muted: #8888a0;
+      --text-dim: #55556a;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: 
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(139, 92, 246, 0.12), transparent),
+        radial-gradient(ellipse 60% 40% at 80% 80%, rgba(6, 182, 212, 0.06), transparent),
+        radial-gradient(ellipse 40% 30% at 10% 60%, rgba(34, 197, 94, 0.04), transparent);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 3rem 2rem;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .header h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--cyan) 50%, var(--green) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .header .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+
+    .header .count-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.25);
+      font-size: 0.85rem;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .count-badge .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+      50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+    }
+
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .filter-btn {
+      padding: 0.45rem 1.1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--border-hover);
+      color: var(--text);
+      background: var(--surface-hover);
+    }
+
+    .filter-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(139, 92, 246, 0.08);
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .deck-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .deck-card {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      overflow: hidden;
+      text-decoration: none;
+      display: block;
+    }
+
+    .deck-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--cyan));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .deck-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 20px var(--accent-glow);
+    }
+
+    .deck-card:hover::before { opacity: 1; }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .card-domain {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.65rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      background: rgba(6, 182, 212, 0.1);
+      color: var(--cyan);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      white-space: nowrap;
+      flex-shrink: 0;
+      margin-left: 0.75rem;
+    }
+
+    .card-domain.custom {
+      background: rgba(34, 197, 94, 0.1);
+      color: var(--green);
+      border-color: rgba(34, 197, 94, 0.2);
+    }
+
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .tag {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      font-weight: 500;
+    }
+
+    .tag-category {
+      background: rgba(139, 92, 246, 0.1);
+      color: var(--accent);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    .tag-branch {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--amber);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+
+    .tag-main {
+      background: rgba(34, 197, 94, 0.08);
+      color: var(--green);
+      border: 1px solid rgba(34, 197, 94, 0.15);
+    }
+
+    .card-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .card-footer {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-url {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 280px;
+    }
+
+    .open-arrow {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: rgba(139, 92, 246, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+
+    .deck-card:hover .open-arrow {
+      background: var(--accent);
+      color: white;
+      transform: translateX(2px);
+    }
+
+    .repo-link {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      margin-top: 0.5rem;
+      display: block;
+    }
+
+    .repo-link a {
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .repo-link a:hover { color: var(--accent); }
+
+    @media (max-width: 860px) {
+      .deck-grid { grid-template-columns: 1fr; }
+      .header h1 { font-size: 2rem; }
+      .container { padding: 2rem 1rem; }
+    }
+
+    .deck-card {
+      animation: fadeSlideIn 0.4s ease forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>NoDwell Pitch Deck Gallery</h1>
+      <p class="subtitle">Every deck, every branch - live on Netlify</p>
+      <div class="count-badge">
+        <span class="dot"></span>
+        <span id="live-count">22 decks live</span>
+      </div>
+    </div>
+
+    <div class="filter-bar" id="filter-bar">
+      <button class="filter-btn active" data-filter="all">All Decks</button>
+      <button class="filter-btn" data-filter="personalized">Personalized</button>
+      <button class="filter-btn" data-filter="general">General</button>
+      <button class="filter-btn" data-filter="branch">Branch Variants</button>
+      <button class="filter-btn" data-filter="other">Other Presentations</button>
+    </div>
+
+    <div class="deck-grid" id="deck-grid"></div>
+  </div>
+
+  <script>
+    const decks = [
+      {
+        name: "FINAL General Deck ($54M)",
+        desc: "The polished flagship general deck for the $54M raise",
+        url: "https://deckseriesafinal10.getnodwell.com",
+        domain: "deckseriesafinal10.getnodwell.com",
+        customDomain: true,
+        branch: "main",
+        category: "general",
+        repo: "rblappan/FINALgeneraldeck"
+      },
+      {
+        name: "FINAL General Deck ($6M Raise)",
+        desc: "Variant of the general deck scoped to $6M raise",
+        url: "https://nodwell-6m-raise-deck.netlify.app",
+        domain: "nodwell-6m-raise-deck.netlify.app",
+        customDomain: false,
+        branch: "6m-raise",
+        category: "branch",
+        repo: "rblappan/FINALgeneraldeck"
+      },
+      {
+        name: "Hardware Strategy",
+        desc: "AI Hardware strategy presentation",
+        url: "https://nodwell-hardware-strategy.netlify.app",
+        domain: "nodwell-hardware-strategy.netlify.app",
+        customDomain: false,
+        branch: "main",
+        category: "other",
+        repo: "rblappan/HardwareStradegy"
+      },
+      {
+        name: "ND Last 10% Raise",
+        desc: "Series A investor portal for the last 10% of the raise",
+        url: "https://seriesainvestorportal.getnodwell.com",
+        domain: "seriesainvestorportal.getnodwell.com",
+        customDomain: true,
+        branch: "main",
+        category: "general",
+        repo: "rblappan/NDlast10-raise"
+      },
+      {
+        name: "ND Last 10% (Bridge)",
+        desc: "Bridge round variant of the last 10% deck",
+        url: "https://nodwell-nd10-bridge.netlify.app",
+        domain: "nodwell-nd10-bridge.netlify.app",
+        customDomain: false,
+        branch: "bridge",
+        category: "branch",
+        repo: "rblappan/NDlast10-raise"
+      },
+      {
+        name: "ND Last 10% (Pre-Seed/Series A)",
+        desc: "Pre-seed to Series A variant with calculator",
+        url: "https://nodwell-nd10-preseed-seriesa.netlify.app",
+        domain: "nodwell-nd10-preseed-seriesa.netlify.app",
+        customDomain: false,
+        branch: "preseed-series-a",
+        category: "branch",
+        repo: "rblappan/NDlast10-raise"
+      },
+      {
+        name: "Ballast AI Presentation",
+        desc: "AI presentation for Ballast",
+        url: "https://nodwell-ai-presentation.netlify.app",
+        domain: "nodwell-ai-presentation.netlify.app",
+        customDomain: false,
+        branch: "main",
+        category: "other",
+        repo: "rblappan/aipresentation"
+      },
+      {
+        name: "CampX Deck (Personalized)",
+        desc: "Volvo CampX accelerator - personalized pitch",
+        url: "https://campx.getnodwell.com",
+        domain: "campx.getnodwell.com",
+        customDomain: true,
+        branch: "main",
+        category: "personalized",
+        repo: "rblappan/campxdeck_detailed"
+      },
+      {
+        name: "Cargill Deck (Personalized)",
+        desc: "Cargill supply chain/cold chain personalized pitch",
+        url: "https://cargill.getnodwell.com",
+        domain: "cargill.getnodwell.com",
+        customDomain: true,
+        branch: "main",
+        category: "personalized",
+        repo: "rblappan/cargilldeck_detailed"
+      },
+      {
+        name: "Invest Midwest Deck",
+        desc: "Short pitch deck for Invest Midwest",
+        url: "https://investmidwest.getnodwell.com",
+        domain: "investmidwest.getnodwell.com",
+        customDomain: true,
+        branch: "main",
+        category: "personalized",
+        repo: "rblappan/invest_midwest_deck"
+      },
+      {
+        name: "Sope Creek (Series A - Full)",
+        desc: "Sope Creek Series A deck with calculator and financial model",
+        url: "https://nodwell-sopecreek-capital.netlify.app",
+        domain: "nodwell-sopecreek-capital.netlify.app",
+        customDomain: false,
+        branch: "main",
+        category: "personalized",
+        repo: "rblappan/nodwell-pitch-sopecreek"
+      },
+      {
+        name: "NoDwell Deck Beta",
+        desc: "Beta version of the NoDwell deck",
+        url: "https://nodwell-deck-beta.netlify.app",
+        domain: "nodwell-deck-beta.netlify.app",
+        customDomain: false,
+        branch: "main",
+        category: "general",
+        repo: "rblappan/nodwell_deck_beta"
+      },
+      {
+        name: "NoDwell vs Baton Comparison",
+        desc: "Competitive comparison deck - NoDwell vs Baton",
+        url: "https://nodwell-baton-comparison.netlify.app",
+        domain: "nodwell-baton-comparison.netlify.app",
+        customDomain: false,
+        branch: "main",
+        category: "other",
+        repo: "rblappan/nodwellbatoncomparrison"
+      },
+      {
+        name: "General Deck (Detailed)",
+        desc: "Detailed general-purpose NoDwell pitch deck (pre-seed)",
+        url: "https://preseeddeck.getnodwell.com",
+        domain: "preseeddeck.getnodwell.com",
+        customDomain: true,
+        branch: "main",
+        category: "general",
+        repo: "rblappan/nodwellgeneraldeck_detailed"
+      },
+      {
+        name: "General Deck (Series A Bridged)",
+        desc: "Series A abridged variant of the general detailed deck",
+        url: "https://seriesabridgedeck.getnodwell.com",
+        domain: "seriesabridgedeck.getnodwell.com",
+        customDomain: true,
+        branch: "seriesabridgedeck",
+        category: "branch",
+        repo: "rblappan/nodwellgeneraldeck_detailed"
+      },
+      {
+        name: "Personal Tesla Plan",
+        desc: "Plan for buying Teslas for Elon's cybercab network launch",
+        url: "https://nodwell-personal-tesla.netlify.app",
+        domain: "nodwell-personal-tesla.netlify.app",
+        customDomain: false,
+        branch: "main",
+        category: "other",
+        repo: "rblappan/personalteslaplan"
+      },
+      {
+        name: "proChain Ventures (Personalized)",
+        desc: "proChain Ventures personalized pitch - the canonical base deck",
+        url: "https://prochain.getnodwell.com",
+        domain: "prochain.getnodwell.com",
+        customDomain: true,
+        branch: "main",
+        category: "personalized",
+        repo: "rblappan/prochainventuresdeck_detailed"
+      },
+      {
+        name: "Sope Creek Pre-Seed (Personalized)",
+        desc: "Sope Creek pre-seed personalized pitch",
+        url: "https://nodwell-sopecreek-preseed.netlify.app",
+        domain: "nodwell-sopecreek-preseed.netlify.app",
+        customDomain: false,
+        branch: "main",
+        category: "personalized",
+        repo: "rblappan/sopecreekpreseed_detailed_personalized"
+      },
+      {
+        name: "Sope Creek (General Deck Branch)",
+        desc: "General deck variant inside the Sope Creek repo",
+        url: "https://nodwell-sopecreek-general.netlify.app",
+        domain: "nodwell-sopecreek-general.netlify.app",
+        customDomain: false,
+        branch: "generaldeck_detailed",
+        category: "branch",
+        repo: "rblappan/sopecreekpreseed_detailed_personalized"
+      },
+      {
+        name: "Sope Creek (Series A Personalized)",
+        desc: "Series A personalized variant with calculator",
+        url: "https://nodwell-sopecreek-seriesa.netlify.app",
+        domain: "nodwell-sopecreek-seriesa.netlify.app",
+        customDomain: false,
+        branch: "series-a-personalized",
+        category: "branch",
+        repo: "rblappan/sopecreekpreseed_detailed_personalized"
+      },
+      {
+        name: "Sope Creek (Series A Bridged)",
+        desc: "Series A abridged variant with hero imagery",
+        url: "https://nodwell-sopecreek-abridged.netlify.app",
+        domain: "nodwell-sopecreek-abridged.netlify.app",
+        customDomain: false,
+        branch: "seriesabridgedeck",
+        category: "branch",
+        repo: "rblappan/sopecreekpreseed_detailed_personalized"
+      },
+      {
+        name: "Supply Chain Ventures (Personalized)",
+        desc: "Supply Chain Ventures personalized detailed pitch",
+        url: "https://supplychainventures.getnodwell.com",
+        domain: "supplychainventures.getnodwell.com",
+        customDomain: true,
+        branch: "main",
+        category: "personalized",
+        repo: "rblappan/supplychainventuresdeck_detailed"
+      }
+    ];
+
+    const grid = document.getElementById('deck-grid');
+    const filterBar = document.getElementById('filter-bar');
+
+    function renderCards(filter = 'all') {
+      grid.innerHTML = '';
+      const filtered = filter === 'all' ? decks : decks.filter(d => d.category === filter);
+      
+      document.getElementById('live-count').textContent = `${filtered.length} deck${filtered.length !== 1 ? 's' : ''} showing`;
+
+      filtered.forEach((deck, i) => {
+        const card = document.createElement('a');
+        card.className = 'deck-card';
+        card.href = deck.url;
+        card.target = '_blank';
+        card.rel = 'noopener';
+        card.style.animationDelay = `${i * 0.04}s`;
+
+        const branchTag = deck.branch !== 'main' 
+          ? `<span class="tag tag-branch">\u24D1 ${deck.branch}</span>`
+          : `<span class="tag tag-main">\u25CF main</span>`;
+
+        const catLabels = {
+          personalized: 'Personalized',
+          general: 'General',
+          branch: 'Branch Variant',
+          other: 'Other'
+        };
+
+        const domainClass = deck.customDomain ? 'card-domain custom' : 'card-domain';
+
+        card.innerHTML = `
+          <div class="card-header">
+            <span class="card-title">${deck.name}</span>
+            <span class="${domainClass}">${deck.customDomain ? '\uD83C\uDF10 Custom' : 'Netlify'}</span>
+          </div>
+          <div class="card-meta">
+            <span class="tag tag-category">${catLabels[deck.category]}</span>
+            ${branchTag}
+          </div>
+          <p class="card-desc">${deck.desc}</p>
+          <div class="card-footer">
+            <span class="card-url">${deck.domain}</span>
+            <div class="open-arrow">\u2192</div>
+          </div>
+          <span class="repo-link"><a href="https://github.com/${deck.repo}" target="_blank" rel="noopener">\u2937 ${deck.repo}</a></span>
+        `;
+
+        grid.appendChild(card);
+      });
+    }
+
+    filterBar.addEventListener('click', e => {
+      if (!e.target.classList.contains('filter-btn')) return;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      renderCards(e.target.dataset.filter);
+    });
+
+    renderCards();
+  </script>
+</body>
+</html>
